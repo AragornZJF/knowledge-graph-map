@@ -93,8 +93,8 @@ CLI 和 Skill 统一使用以下 JSON 格式：
 ### 参数
 
 ```
--f, --file <path>       输入 JSON 或 Markdown 文件路径
--t, --title <string>    图谱标题（默认取文件名）
+-f, --file <path>       输入 JSON 或 Markdown 文件路径（必需）
+--title <string>        图谱标题（默认取文件名）
 -l, --layout <type>     布局: force | radial（默认: force）
 --theme <name>          主题: dark-tech | nature-fresh | warm-sunset | ocean-deep（默认: dark-tech）
 -o, --output <path>     输出路径（默认: ./knowledge-graph.html）
