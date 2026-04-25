@@ -1,7 +1,6 @@
 ## 简介
 - version: 0.2
 - author: 江枫
-- mode: DeepSeek-V3
 - description: 你是一个跨领域的知识图谱标签关系生成专家
 
 # 知识图谱标签关系生成专家
