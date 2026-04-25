@@ -2,6 +2,24 @@
 
 交互式知识图谱可视化工具，支持 CLI 和 Claude Code Skill 双模式。
 
+## 安装
+
+```bash
+# 直接使用（无需安装）
+npx knowledge-graph-map -f data.json
+
+# 或全局安装
+npm install -g knowledge-graph-map
+knowledge-graph-map -f data.json
+```
+
+### Claude Code Skill 安装
+
+```bash
+# 将 skill 目录复制到你的 Claude Code skills 目录
+cp -r skill/knowledge-graph.md ~/.claude/skills/
+```
+
 ## 快速开始
 
 ### CLI 模式
