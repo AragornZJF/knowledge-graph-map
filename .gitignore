@@ -2,3 +2,4 @@ node_modules/
 .superpowers/
 *.html
 !templates/*.html
+.claude/settings.local.json
