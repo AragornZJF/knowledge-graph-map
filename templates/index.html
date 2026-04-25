@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}} - 知识图谱</title>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; transition: background 0.5s ease; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.6s ease-out; }
+
+    .toolbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 24px; border-bottom: 1px solid var(--border); transition: background 0.4s ease; }
+    .toolbar h1 { font-size: 18px; font-weight: 700; }
+    .toolbar-controls { display: flex; gap: 8px; align-items: center; }
+
+    .btn { padding: 6px 14px; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; font-size: 13px; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 6px; }
+    .btn:hover { transform: scale(1.05); }
+    .btn.active { font-weight: 600; }
+
+    .chart-container { width: 100%; height: calc(100vh - 100px); }
+
+    .footer-tips { padding: 8px 24px; border-top: 1px solid var(--border); font-size: 12px; text-align: center; transition: background 0.4s ease; }
+
+    select.ctrl-select { padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border); font-size: 13px; cursor: pointer; transition: all 0.2s ease; }
+    select.ctrl-select:hover { transform: scale(1.03); }
+  </style>
+</head>
+<body>
+  <div class="toolbar fade-in" id="toolbar">
+    <h1 id="pageTitle"><i class="fas fa-project-diagram" style="margin-right:8px;"></i>{{TITLE}}</h1>
+    <div class="toolbar-controls">
+      <button class="btn" id="btnForce" onclick="switchLayout('force')"><i class="fas fa-project-diagram"></i> 力导向</button>
+      <button class="btn" id="btnRadial" onclick="switchLayout('radial')"><i class="fas fa-bullseye"></i> 辐射状</button>
+      <select class="ctrl-select" id="themeSelect" onchange="switchTheme(this.value)">
+        <option value="dark-tech">暗色科技</option>
+        <option value="nature-fresh">自然清新</option>
+        <option value="warm-sunset">暖阳落日</option>
+        <option value="ocean-deep">深海幽蓝</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="chart-container fade-in" id="chart"></div>
+
+  <div class="footer-tips fade-in" id="footer">
+    <i class="fas fa-info-circle"></i> 操作提示：悬停查看详情 &nbsp;|&nbsp; 点击高亮关联节点 &nbsp;|&nbsp; 拖拽调整布局 &nbsp;|&nbsp; 滚轮缩放
+  </div>
+
+  <script>
+    /*__THEMES__*/
+    /*__LAYOUTS__*/
+    /*__DATA__*/
+
+    let currentTheme = '__INITIAL_THEME__';
+    let currentLayout = '__INITIAL_LAYOUT__';
+    let chart = null;
+
+    function applyCSS(theme) {
+      const t = themes[theme];
+      document.body.style.background = t.background;
+      document.body.style.color = t.textPrimary;
+      document.body.style.setProperty('--border', t.borderColor);
+      const toolbar = document.getElementById('toolbar');
+      toolbar.style.background = t.toolbarBg;
+      toolbar.style.borderColor = t.borderColor;
+      const footer = document.getElementById('footer');
+      footer.style.background = t.toolbarBg;
+      footer.style.borderColor = t.borderColor;
+      footer.style.color = t.textSecondary;
+      document.querySelectorAll('.btn').forEach(btn => {
+        btn.style.background = t.buttonBg;
+        btn.style.color = t.textPrimary;
+        btn.style.borderColor = t.borderColor;
+      });
+      document.querySelectorAll('.btn.active').forEach(btn => {
+        btn.style.background = t.buttonActiveBg;
+      });
+      document.querySelectorAll('.ctrl-select').forEach(sel => {
+        sel.style.background = t.buttonBg;
+        sel.style.color = t.textPrimary;
+        sel.style.borderColor = t.borderColor;
+      });
+    }
+
+    function buildOption(layoutName) {
+      const t = themes[currentTheme];
+      const layoutCfg = layouts[layoutName].echarts;
+
+      const categoryMap = {};
+      graphData.categories.forEach((cat, i) => {
+        categoryMap[cat] = i;
+      });
+
+      const seriesData = graphData.nodes.map(n => ({
+        id: n.id,
+        name: n.name,
+        value: n.weight,
+        category: categoryMap[n.category] !== undefined ? categoryMap[n.category] : 0,
+        symbolSize: Math.max(20, n.weight * 0.6 + 15),
+        label: {
+          show: true,
+          fontSize: Math.max(10, n.weight * 0.12 + 8),
+          color: t.textPrimary
+        },
+        itemStyle: {
+          color: t.colors[categoryMap[n.category] % t.colors.length],
+          borderColor: t.borderColor,
+          borderWidth: 2
+        }
+      }));
+
+      const seriesLinks = graphData.links.map(l => ({
+        source: String(l.source),
+        target: String(l.target),
+        lineStyle: {
+          color: t.lineColor,
+          width: 1.5,
+          curveness: 0.1
+        }
+      }));
+
+      return {
+        tooltip: {
+          trigger: 'item',
+          backgroundColor: t.tooltipBg,
+          borderColor: t.borderColor,
+          textStyle: { color: t.textPrimary, fontSize: 13 },
+          formatter: function(params) {
+            if (params.dataType === 'node') {
+              const d = params.data;
+              const cat = graphData.categories[d.category] || '';
+              const linkCount = graphData.links.filter(l => String(l.source) === d.id || String(l.target) === d.id).length;
+              return '<b>' + d.name + '</b><br/>分类: ' + cat + '<br/>权重: ' + d.value + '<br/>关联数: ' + linkCount;
+            }
+            if (params.dataType === 'edge') {
+              const rel = graphData.links.find(l => String(l.source) === params.data.source && String(l.target) === params.data.target);
+              return (rel ? rel.relation : '');
+            }
+            return '';
+          }
+        },
+        legend: {
+          data: graphData.categories.map((cat, i) => ({ name: cat, itemStyle: { color: t.colors[i % t.colors.length] } })),
+          textStyle: { color: t.textSecondary, fontSize: 12 },
+          bottom: 50,
+          left: 'center',
+          selectedMode: true
+        },
+        animationDuration: 800,
+        animationEasingUpdate: 'quinticInOut',
+        series: [{
+          type: 'graph',
+          ...layoutCfg,
+          data: seriesData,
+          links: seriesLinks,
+          categories: graphData.categories.map((cat, i) => ({ name: cat })),
+          emphasis: {
+            focus: 'adjacency',
+            lineStyle: { width: 3, color: t.lineHighlight },
+            itemStyle: { borderWidth: 4, shadowBlur: 20 }
+          },
+          label: { show: true, position: 'right' },
+          edgeSymbol: ['none', 'arrow'],
+          edgeSymbolSize: [4, 10],
+          lineStyle: { opacity: 0.6, curveness: 0.1 }
+        }]
+      };
+    }
+
+    function initChart() {
+      chart = echarts.init(document.getElementById('chart'));
+      updateChart();
+      window.addEventListener('resize', () => chart.resize());
+    }
+
+    function updateChart() {
+      const option = buildOption(currentLayout);
+      chart.setOption(option, true);
+    }
+
+    function switchLayout(name) {
+      currentLayout = name;
+      document.getElementById('btnForce').classList.toggle('active', name === 'force');
+      document.getElementById('btnRadial').classList.toggle('active', name === 'radial');
+      updateChart();
+    }
+
+    function switchTheme(name) {
+      currentTheme = name;
+      applyCSS(name);
+      updateChart();
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', function() {
+      applyCSS(currentTheme);
+      document.getElementById('themeSelect').value = currentTheme;
+      switchLayout(currentLayout);
+      initChart();
+    });
+  </script>
+</body>
+</html>
