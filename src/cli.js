@@ -18,6 +18,7 @@ function parseArgs(argv) {
     else if (arg === '--theme') { args.theme = argv[++i]; }
     else if (arg === '-o' || arg === '--output') { args.output = argv[++i]; }
     else if (arg === '--no-open') { args.noOpen = true; }
+    else if (arg === '--install-skill') { args.installSkill = true; }
     else if (arg === '-h' || arg === '--help') { args.help = true; }
     else { args._.push(arg); }
   }
@@ -38,12 +39,14 @@ Options:
   --theme <name>          主题: dark-tech | nature-fresh | warm-sunset | ocean-deep (默认: dark-tech)
   -o, --output <path>     输出 HTML 文件路径 (默认: ./knowledge-graph.html)
   --no-open               不自动打开浏览器
+  --install-skill         安装为 Claude Code Skill
   -h, --help              显示帮助
 
 Examples:
   npx knowledge-graph-map -f data.json
   npx knowledge-graph-map -f notes.md --layout radial --theme ocean-deep
   npx knowledge-graph-map -f data.json -o output.html --no-open
+  npx knowledge-graph-map --install-skill
 `);
 }
 
@@ -56,10 +59,33 @@ function openFile(filePath) {
   });
 }
 
+function installSkill() {
+  const homeDir = process.env.HOME || process.env.USERPROFILE;
+  if (!homeDir) { console.error('错误: 无法确定用户主目录'); process.exit(1); }
+
+  const skillSrc = path.join(__dirname, '..', 'skill', 'knowledge-graph.md');
+  if (!fs.existsSync(skillSrc)) { console.error('错误: 找不到 Skill 文件: ' + skillSrc); process.exit(1); }
+
+  const skillContent = fs.readFileSync(skillSrc, 'utf-8');
+
+  // Try .claude/skills/ first, fallback to .claude/commands/
+  const skillDir = path.join(homeDir, '.claude', 'skills');
+  const skillDest = path.join(skillDir, 'knowledge-graph.md');
+
+  fs.mkdirSync(skillDir, { recursive: true });
+  fs.writeFileSync(skillDest, skillContent, 'utf-8');
+
+  console.log('Skill 已安装到: ' + skillDest);
+  console.log('在 Claude Code 中使用 /knowledge-graph 即可触发');
+}
+
 function main() {
   const args = parseArgs(process.argv);
 
   if (args.help) { printHelp(); process.exit(0); }
+
+  if (args.installSkill) { installSkill(); process.exit(0); }
+
   if (!args.file) { console.error('错误: 请使用 -f 指定输入文件路径'); printHelp(); process.exit(1); }
 
   const filePath = path.resolve(args.file);

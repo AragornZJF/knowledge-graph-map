@@ -16,8 +16,11 @@ knowledge-graph-map -f data.json
 ### Claude Code Skill 安装
 
 ```bash
-# 将 skill 目录复制到你的 Claude Code skills 目录
-cp -r skill/knowledge-graph.md ~/.claude/skills/
+# 通过 npx skills 安装（推荐）
+npx skills add AragornZJF/knowledge-graph-map --skill knowledge-graph
+
+# 或使用内置安装命令
+npx knowledge-graph-map --install-skill
 ```
 
 ## 快速开始

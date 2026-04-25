@@ -7,7 +7,8 @@
   },
   "files": [
     "src/",
-    "templates/"
+    "templates/",
+    "skills/"
   ],
   "scripts": {
     "test": "node --test test/*.test.js"
