@@ -1,6 +1,10 @@
 # Knowledge Graph Map
 
+[![npm version](https://img.shields.io/npm/v/knowledge-graph-map.svg)](https://www.npmjs.com/package/knowledge-graph-map)
+
 交互式知识图谱可视化工具，支持 CLI 和 Claude Code Skill 双模式。
+
+**npm**: https://www.npmjs.com/package/knowledge-graph-map
 
 ## 安装
 
