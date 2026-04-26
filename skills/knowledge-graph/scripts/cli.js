@@ -68,7 +68,7 @@ function installSkill() {
   const homeDir = process.env.HOME || process.env.USERPROFILE;
   if (!homeDir) { console.error('错误: 无法确定用户主目录'); process.exit(1); }
 
-  const skillSrc = path.join(__dirname, '..', 'skill', 'knowledge-graph.md');
+  const skillSrc = path.join(__dirname, '..', 'SKILL.md');
   if (!fs.existsSync(skillSrc)) { console.error('错误: 找不到 Skill 文件: ' + skillSrc); process.exit(1); }
 
   const skillContent = fs.readFileSync(skillSrc, 'utf-8');
