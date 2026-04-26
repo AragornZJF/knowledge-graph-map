@@ -1,8 +1,10 @@
-# Knowledge Graph Map
+# Knowledge Graph Map 知识图谱
+
+支持将指定的markdown格式文件或JSON数据，转换成可交互式、单一可运行的知识图谱网页。同时支持布局（环形、力导图）和主题指定。可使用 CLI 和 Claude Code Skill 双模式进行安装。
 
 [![npm version](https://img.shields.io/npm/v/knowledge-graph-map.svg)](https://www.npmjs.com/package/knowledge-graph-map)
 
-交互式知识图谱可视化工具，支持 CLI 和 Claude Code Skill 双模式。
+
 
 **npm**: https://www.npmjs.com/package/knowledge-graph-map
 
@@ -39,11 +41,12 @@ npx knowledge-graph-map -f data.json
 npx knowledge-graph-map -f notes.md
 
 # 指定布局和主题
-npx knowledge-graph-map -f data.json --layout radial --theme ocean-deep
+npx knowledge-graph-map -f data.json --layout radial --theme dark-tech
 
 # 指定输出路径
 npx knowledge-graph-map -f data.json -o my-graph.html
 ```
+
 
 ### Claude Code Skill
 
@@ -58,6 +61,8 @@ npx knowledge-graph-map -f data.json -o my-graph.html
 ## 输入格式
 
 ### JSON 格式
+
+- 可使用DeepSeek、Claude 大模型等，将markdown核心概念转JSON 后使用该技能
 
 ```json
 {
@@ -107,6 +112,12 @@ npx knowledge-graph-map -f data.json -o my-graph.html
 -o, --output <path>     输出路径
 --no-open               不自动打开浏览器
 ```
+
+## 流程图
+
+![Knowledge Graph Skill 执行流程](knowledge-graph-flow.svg)
+
+
 
 ## License
 

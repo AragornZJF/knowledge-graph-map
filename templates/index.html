@@ -22,7 +22,16 @@
     .btn:hover { transform: scale(1.05); }
     .btn.active { font-weight: 600; }
 
-    .chart-container { width: 100%; height: calc(100vh - 100px); }
+    .chart-container { width: 100%; height: calc(100vh - 100px); position: relative; }
+    .chart-container::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 48px;
+      background: linear-gradient(transparent, var(--toolbar-fade, rgba(17,22,56,0.9)));
+      pointer-events: none;
+      z-index: 10;
+    }
 
     .footer-tips { padding: 8px 24px; border-top: 1px solid var(--border); font-size: 12px; text-align: center; transition: background 0.4s ease; }
 
@@ -72,6 +81,7 @@
       footer.style.background = t.toolbarBg;
       footer.style.borderColor = t.borderColor;
       footer.style.color = t.textSecondary;
+      document.documentElement.style.setProperty('--toolbar-fade', t.toolbarBg);
       document.querySelectorAll('.btn').forEach(btn => {
         btn.style.background = t.buttonBg;
         btn.style.color = t.textPrimary;
@@ -96,31 +106,66 @@
         categoryMap[cat] = i;
       });
 
-      const seriesData = graphData.nodes.map(n => ({
-        id: n.id,
-        name: n.name,
-        value: n.weight,
-        category: categoryMap[n.category] !== undefined ? categoryMap[n.category] : 0,
-        symbolSize: Math.max(20, n.weight * 0.6 + 15),
-        label: {
-          show: true,
-          fontSize: Math.max(10, n.weight * 0.12 + 8),
-          color: t.textPrimary
-        },
-        itemStyle: {
-          color: t.colors[categoryMap[n.category] % t.colors.length],
-          borderColor: t.borderColor,
-          borderWidth: 2
+      const seriesData = graphData.nodes.map(n => {
+        const catIdx = categoryMap[n.category] !== undefined ? categoryMap[n.category] : 0;
+        const catColor = t.colors[catIdx % t.colors.length];
+        let nodeSize, fontSize, fontWeight, borderWidth, shadowBlur;
+        if (n.weight >= 70) {
+          nodeSize = Math.max(50, n.weight * 1.0 + 10);
+          fontSize = 15;
+          fontWeight = 'bold';
+          borderWidth = 3;
+          shadowBlur = 15;
+        } else if (n.weight >= 50) {
+          nodeSize = Math.max(38, n.weight * 0.7 + 10);
+          fontSize = 13;
+          fontWeight = 'bold';
+          borderWidth = 2.5;
+          shadowBlur = 8;
+        } else {
+          nodeSize = Math.max(28, n.weight * 0.6 + 10);
+          fontSize = 11;
+          fontWeight = 'normal';
+          borderWidth = 2;
+          shadowBlur = 3;
         }
-      }));
+        return {
+          id: n.id,
+          name: n.name,
+          value: n.weight,
+          category: catIdx,
+          symbolSize: nodeSize,
+          label: {
+            show: true,
+            fontSize: fontSize,
+            fontWeight: fontWeight,
+            color: t.textPrimary
+          },
+          itemStyle: {
+            color: catColor,
+            borderColor: n.weight >= 50 ? catColor : t.borderColor,
+            borderWidth: borderWidth,
+            shadowBlur: shadowBlur,
+            shadowColor: catColor
+          },
+          tooltip: {
+            formatter: function(params) {
+              const d = params.data;
+              const cat = graphData.categories[d.category] || '';
+              const linkCount = graphData.links.filter(l => String(l.source) === d.id || String(l.target) === d.id).length;
+              return '<b>' + d.name + '</b><br/>分类: ' + cat + '<br/>权重: ' + d.value + '<br/>关联数: ' + linkCount;
+            }
+          }
+        };
+      });
 
       const seriesLinks = graphData.links.map(l => ({
         source: String(l.source),
         target: String(l.target),
         lineStyle: {
           color: t.lineColor,
-          width: 1.5,
-          curveness: 0.1
+          width: 1,
+          curveness: 0.15
         }
       }));
 
@@ -129,13 +174,17 @@
           trigger: 'item',
           backgroundColor: t.tooltipBg,
           borderColor: t.borderColor,
+          borderWidth: 1,
+          padding: [8, 12],
           textStyle: { color: t.textPrimary, fontSize: 13 },
+          extraCssText: 'border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,0.3);',
           formatter: function(params) {
             if (params.dataType === 'node') {
               const d = params.data;
               const cat = graphData.categories[d.category] || '';
+              const catColor = t.colors[d.category % t.colors.length];
               const linkCount = graphData.links.filter(l => String(l.source) === d.id || String(l.target) === d.id).length;
-              return '<b>' + d.name + '</b><br/>分类: ' + cat + '<br/>权重: ' + d.value + '<br/>关联数: ' + linkCount;
+              return '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:' + catColor + ';margin-right:6px;"></span><b>' + d.name + '</b><br/><span style="color:' + catColor + ';">' + cat + '</span><br/>权重: ' + d.value + '&nbsp;&nbsp;关联: ' + linkCount;
             }
             if (params.dataType === 'edge') {
               const rel = graphData.links.find(l => String(l.source) === params.data.source && String(l.target) === params.data.target);
@@ -146,10 +195,15 @@
         },
         legend: {
           data: graphData.categories.map((cat, i) => ({ name: cat, itemStyle: { color: t.colors[i % t.colors.length] } })),
-          textStyle: { color: t.textSecondary, fontSize: 12 },
-          bottom: 50,
-          left: 'center',
-          selectedMode: true
+          type: 'scroll',
+          orient: 'vertical',
+          textStyle: { color: t.textSecondary, fontSize: 11 },
+          top: 60,
+          right: 10,
+          selectedMode: true,
+          pageTextStyle: { color: t.textSecondary },
+          pageIconColor: t.textSecondary,
+          pageIconInactiveColor: t.borderColor
         },
         animationDuration: 800,
         animationEasingUpdate: 'quinticInOut',
@@ -173,13 +227,17 @@
     }
 
     function initChart() {
-      chart = echarts.init(document.getElementById('chart'));
+      var dom = document.getElementById('chart');
+      if (!dom || dom.offsetWidth === 0 || dom.offsetHeight === 0) return false;
+      chart = echarts.init(dom);
       updateChart();
-      window.addEventListener('resize', () => chart.resize());
+      window.addEventListener('resize', function() { if (chart) chart.resize(); });
+      return true;
     }
 
     function updateChart() {
-      const option = buildOption(currentLayout);
+      if (!chart) return;
+      var option = buildOption(currentLayout);
       chart.setOption(option, true);
     }
 
@@ -200,8 +258,11 @@
     document.addEventListener('DOMContentLoaded', function() {
       applyCSS(currentTheme);
       document.getElementById('themeSelect').value = currentTheme;
-      initChart();
-      switchLayout(currentLayout);
+      if (!initChart()) {
+        setTimeout(function() { initChart(); switchLayout(currentLayout); }, 100);
+      } else {
+        switchLayout(currentLayout);
+      }
     });
   </script>
 </body>

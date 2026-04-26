@@ -1,27 +1,28 @@
 'use strict';
 
-function detectCircular(links, maxDepth) {
+function detectCircular(links) {
   const adj = {};
   for (const l of links) {
     if (!adj[l.source]) adj[l.source] = [];
     adj[l.source].push(l.target);
   }
 
-  function dfs(node, visited, depth) {
-    if (depth > maxDepth) return true;
+  function dfs(node, visited, path) {
+    if (path.has(node)) return true;
+    if (visited.has(node)) return false;
+    visited.add(node);
+    path.add(node);
     const neighbors = adj[node] || [];
     for (const next of neighbors) {
-      if (visited.has(next)) return true;
-      visited.add(next);
-      if (dfs(next, visited, depth + 1)) return true;
-      visited.delete(next);
+      if (dfs(next, visited, path)) return true;
     }
+    path.delete(node);
     return false;
   }
 
+  const visited = new Set();
   for (const l of links) {
-    const visited = new Set([l.source]);
-    if (dfs(l.source, visited, 1)) return true;
+    if (dfs(l.source, visited, new Set())) return true;
   }
   return false;
 }
@@ -34,8 +35,8 @@ function validateData(data) {
     return { valid: false, errors };
   }
 
-  if (data.nodes.length > 200) {
-    errors.push(`节点数量 ${data.nodes.length} 超过上限 200`);
+  if (data.nodes.length > 500) {
+    errors.push(`节点数量 ${data.nodes.length} 超过上限 500`);
   }
 
   const ids = new Set();
@@ -59,8 +60,8 @@ function validateData(data) {
     }
   }
 
-  if (detectCircular(links, 5)) {
-    errors.push('检测到环形引用（深度超过 maxDepth=5）');
+  if (detectCircular(links)) {
+    errors.push('检测到环形引用');
   }
 
   return { valid: errors.length === 0, errors };

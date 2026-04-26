@@ -49,7 +49,7 @@ description: 生成知识图谱可视化。输入主题词或 Markdown 文档，
 ```
 
 ### 约束
-- 节点数量不超过 200
+- 节点数量不超过 500
 - 每个 node 的 id 必须唯一
 - link 的 source/target 必须引用已存在的节点 id
 - weight 值域: 1-100

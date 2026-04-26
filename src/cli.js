@@ -51,10 +51,15 @@ Examples:
 }
 
 function openFile(filePath) {
-  const cmd = process.platform === 'win32' ? 'start'
-    : process.platform === 'darwin' ? 'open'
-    : 'xdg-open';
-  exec(`${cmd} "${filePath}"`, (err) => {
+  let cmd;
+  if (process.platform === 'win32') {
+    cmd = 'cmd /c start "" "' + filePath + '"';
+  } else if (process.platform === 'darwin') {
+    cmd = 'open "' + filePath + '"';
+  } else {
+    cmd = 'xdg-open "' + filePath + '"';
+  }
+  exec(cmd, { windowsHide: true }, (err) => {
     if (err) console.error('无法自动打开浏览器，请手动打开: ' + filePath);
   });
 }

@@ -85,32 +85,26 @@ describe('validateData', () => {
     assert.ok(result.errors.some(e => e.includes('1-100')));
   });
 
-  it('rejects more than 200 nodes', () => {
-    const nodes = Array.from({ length: 201 }, (_, i) => ({
+  it('rejects more than 500 nodes', () => {
+    const nodes = Array.from({ length: 501 }, (_, i) => ({
       id: String(i), name: `N${i}`, category: 'cat1', weight: 50
     }));
     const data = { ...validData, nodes };
     const result = validateData(data);
     assert.equal(result.valid, false);
-    assert.ok(result.errors.some(e => e.includes('200')));
+    assert.ok(result.errors.some(e => e.includes('500')));
   });
 
-  it('detects circular references beyond maxDepth', () => {
+  it('detects circular references', () => {
     const nodes = [
       { id: '1', name: 'A', category: 'c', weight: 50 },
       { id: '2', name: 'B', category: 'c', weight: 50 },
-      { id: '3', name: 'C', category: 'c', weight: 50 },
-      { id: '4', name: 'D', category: 'c', weight: 50 },
-      { id: '5', name: 'E', category: 'c', weight: 50 },
-      { id: '6', name: 'F', category: 'c', weight: 50 }
+      { id: '3', name: 'C', category: 'c', weight: 50 }
     ];
     const links = [
       { source: '1', target: '2', relation: 'r' },
       { source: '2', target: '3', relation: 'r' },
-      { source: '3', target: '4', relation: 'r' },
-      { source: '4', target: '5', relation: 'r' },
-      { source: '5', target: '6', relation: 'r' },
-      { source: '6', target: '1', relation: 'r' }
+      { source: '3', target: '1', relation: 'r' }
     ];
     const data = { meta: {}, nodes, links, categories: ['c'] };
     const result = validateData(data);
@@ -118,16 +112,13 @@ describe('validateData', () => {
     assert.ok(result.errors.some(e => e.includes('环形') || e.includes('circular')));
   });
 
-  it('allows chains within maxDepth=5', () => {
-    const nodes = Array.from({ length: 5 }, (_, i) => ({
+  it('allows long chains without circular refs', () => {
+    const nodes = Array.from({ length: 20 }, (_, i) => ({
       id: String(i + 1), name: `N${i + 1}`, category: 'c', weight: 50
     }));
-    const links = [
-      { source: '1', target: '2', relation: 'r' },
-      { source: '2', target: '3', relation: 'r' },
-      { source: '3', target: '4', relation: 'r' },
-      { source: '4', target: '5', relation: 'r' }
-    ];
+    const links = nodes.slice(0, -1).map((_, i) => ({
+      source: String(i + 1), target: String(i + 2), relation: 'r'
+    }));
     const data = { meta: {}, nodes, links, categories: ['c'] };
     const result = validateData(data);
     assert.equal(result.valid, true);
