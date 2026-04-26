@@ -2,17 +2,9 @@
   "name": "knowledge-graph-map",
   "version": "1.1.0",
   "description": "Interactive knowledge graph visualization tool — CLI and Claude Code Skill",
-  "bin": {
-    "knowledge-graph-map": "./src/cli.js"
-  },
   "files": [
-    "src/",
-    "templates/",
     "skills/"
   ],
-  "scripts": {
-    "test": "node --test test/*.test.js"
-  },
   "keywords": [
     "knowledge-graph",
     "wordcloud",
