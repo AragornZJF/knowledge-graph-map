@@ -1,6 +1,6 @@
 {
   "name": "knowledge-graph-map",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Interactive knowledge graph visualization tool — CLI and Claude Code Skill",
   "files": [
     "skills/"
