@@ -8,6 +8,16 @@
 
 **npm**: https://www.npmjs.com/package/knowledge-graph-map
 
+## 实现效果
+
+**清新自然风格-力导向布局 (force)**
+![force layout](force.png)
+
+**暗色科技风格-辐射状布局 (radial)**
+![radial layout](radial.png)
+
+
+
 ## 安装
 
 ```bash
