@@ -5,10 +5,12 @@
 [![npm version](https://img.shields.io/npm/v/knowledge-graph-map.svg)](https://www.npmjs.com/package/knowledge-graph-map)
 
 
-
 **npm**: https://www.npmjs.com/package/knowledge-graph-map
 
 ## 实现效果
+
+如：将markdown格式Harness-Engineering 长文实现效果如下
+
 
 **清新自然风格-力导向布局 (force)**
 ![force layout](force.png)
@@ -20,14 +22,6 @@
 
 ## 安装
 
-```bash
-# 直接使用（无需安装）
-npx knowledge-graph-map -f data.json
-
-# 或全局安装
-npm install -g knowledge-graph-map
-knowledge-graph-map -f data.json
-```
 
 ### Claude Code Skill 安装
 
@@ -38,6 +32,18 @@ npx skills add AragornZJF/knowledge-graph-map --skill knowledge-graph
 # 或使用内置安装命令
 npx knowledge-graph-map --install-skill
 ```
+
+
+```bash
+# 直接使用（无需安装）
+npx knowledge-graph-map -f data.json
+
+# 或全局安装
+npm install -g knowledge-graph-map
+knowledge-graph-map -f data.json
+```
+
+
 
 ## 快速开始
 
