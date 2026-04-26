@@ -76,19 +76,24 @@ description: 生成知识图谱可视化。输入主题词或 Markdown 文档，
 | force | 力导向布局，节点自然散开（默认） |
 | radial | 辐射状布局，核心居中层层展开 |
 
-## 渲染模板
-
-以下是需要输出的完整 HTML 模板。将数据注入模板中的标记位置后输出：
-
-- 将 `graphData` 替换为生成的 nodes/links/categories JSON
-- 将 `__TITLE__` 替换为图谱标题
-- 将 `__THEME__` 替换为选中的主题名
-- 将 `__LAYOUT__` 替换为选中的布局方式
-
-然后输出替换后的完整 HTML。
+## 渲染规则
 
 询问用户想要使用哪个主题和布局，如果用户未指定则使用默认值（dark-tech + force）。
 
-HTML 模板文件路径: `templates/index.html`
+读取模板和脚本文件，将数据注入后输出完整 HTML：
 
-读取该模板文件，将上述标记替换为实际值，然后直接输出完整的 HTML 代码块。
+- HTML 模板: `templates/index.html`
+- 主题配置: `scripts/themes.js`
+- 布局配置: `scripts/layouts.js`
+- Markdown 解析: `scripts/markdown-parser.js`
+- 渲染逻辑: `scripts/render.js`
+- 数据校验: `scripts/validate.js`
+
+模板替换标记：
+
+- `{{TITLE}}` → 图谱标题
+- `/*__THEMES__*/` → `const themes = <从 themes.js 导出的 themes 对象>;`
+- `/*__LAYOUTS__*/` → `const layouts = <从 layouts.js 导出的 layouts 对象>;`
+- `/*__DATA__*/` → `const graphData = { nodes: [...], links: [...], categories: [...] };`
+- `'__INITIAL_THEME__'` → 选中的主题名
+- `'__INITIAL_LAYOUT__'` → 选中的布局方式

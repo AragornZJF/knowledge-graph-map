@@ -1,5 +1,4 @@
 node_modules/
-.superpowers/
+.claude/
+.agents/
 *.html
-!templates/*.html
-.claude/settings.local.json
