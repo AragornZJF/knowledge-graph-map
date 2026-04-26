@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 820" width="960" height="820">
+  <style>
+    text { font-family: 'Microsoft YaHei', 'PingFang SC', 'Noto Sans SC', 'SF Mono', monospace; }
+  </style>
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f0f1a"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+    <marker id="arrow-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#a855f7"/>
+    </marker>
+    <marker id="arrow-cyan" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#22d3ee"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#f97316"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#10b981"/>
+    </marker>
+    <marker id="arrow-gold" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#eab308"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+    </marker>
+    <filter id="glow-purple">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-cyan">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-orange">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Background -->
+  <rect width="960" height="820" fill="url(#bg-grad)"/>
+  <!-- Subtle grid -->
+  <line x1="0" y1="80" x2="960" y2="80" stroke="#1e293b" stroke-width="0.5" opacity="0.3"/>
+  <line x1="0" y1="160" x2="960" y2="160" stroke="#1e293b" stroke-width="0.5" opacity="0.3"/>
+  <line x1="0" y1="240" x2="960" y2="240" stroke="#1e293b" stroke-width="0.5" opacity="0.3"/>
+  <line x1="0" y1="320" x2="960" y2="320" stroke="#1e293b" stroke-width="0.5" opacity="0.3"/>
+  <line x1="0" y1="400" x2="960" y2="400" stroke="#1e293b" stroke-width="0.5" opacity="0.3"/>
+  <line x1="0" y1="480" x2="960" y2="480" stroke="#1e293b" stroke-width="0.5" opacity="0.3"/>
+  <line x1="0" y1="560" x2="960" y2="560" stroke="#1e293b" stroke-width="0.5" opacity="0.3"/>
+  <line x1="0" y1="640" x2="960" y2="640" stroke="#1e293b" stroke-width="0.5" opacity="0.3"/>
+  <line x1="0" y1="720" x2="960" y2="720" stroke="#1e293b" stroke-width="0.5" opacity="0.3"/>
+  <!-- Title -->
+  <text x="480" y="38" text-anchor="middle" fill="#a855f7" font-size="18" font-weight="700" letter-spacing="0.08em" filter="url(#glow-purple)">知识图谱技能 · TOOL CALL 执行流程</text>
+  <text x="480" y="58" text-anchor="middle" fill="#94a3b8" font-size="12" letter-spacing="0.05em">knowledge-graph Skill — 从用户输入到 HTML 输出的完整链路</text>
+  <!-- Node 1: User Input -->
+  <rect x="370" y="80" width="220" height="50" rx="6" fill="#0f172a" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="405" y="101" fill="#a855f7" font-size="10" font-weight="600" letter-spacing="0.06em">输入</text>
+  <text x="405" y="119" fill="#e2e8f0" font-size="13">用户提示词</text>
+  <text x="605" y="110" fill="#475569" font-size="10">/knowledge-graph 或 自然语言</text>
+  <line x1="480" y1="130" x2="480" y2="168" stroke="#a855f7" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+  <!-- Node 2: Skill Match -->
+  <rect x="340" y="170" width="280" height="50" rx="6" fill="#0f172a" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="375" y="191" fill="#22d3ee" font-size="10" font-weight="600" letter-spacing="0.06em">路由匹配</text>
+  <text x="375" y="209" fill="#e2e8f0" font-size="13">Claude Code Skill 路由器</text>
+  <text x="635" y="200" fill="#475569" font-size="10">匹配 /knowledge-graph 技能</text>
+  <line x1="480" y1="220" x2="480" y2="258" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrow-cyan)"/>
+  <!-- Node 3: Load Skill -->
+  <rect x="340" y="260" width="280" height="50" rx="6" fill="#0f172a" stroke="#7c3aed" stroke-width="1.5"/>
+  <text x="375" y="281" fill="#a855f7" font-size="10" font-weight="600" letter-spacing="0.06em">加载技能</text>
+  <text x="375" y="299" fill="#e2e8f0" font-size="13">skills/knowledge-graph/SKILL.md</text>
+  <line x1="480" y1="310" x2="480" y2="358" stroke="#a855f7" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+  <!-- Node 4: Decision Diamond -->
+  <polygon points="480,360 600,400 480,440 360,400" fill="#1e1b4b" stroke="#f97316" stroke-width="1.5" filter="url(#glow-orange)"/>
+  <text x="480" y="397" text-anchor="middle" fill="#f97316" font-size="11" font-weight="600">输入类型？</text>
+  <text x="480" y="411" text-anchor="middle" fill="#94a3b8" font-size="10">分类判断</text>
+  <text x="260" y="393" text-anchor="middle" fill="#10b981" font-size="10" font-weight="600">主题词</text>
+  <text x="700" y="393" text-anchor="middle" fill="#3b82f6" font-size="10" font-weight="600">MARKDOWN</text>
+  <path d="M 360,400 L 290,400 L 290,450" stroke="#10b981" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)"/>
+  <path d="M 600,400 L 670,400 L 670,450" stroke="#3b82f6" stroke-width="1.5" fill="none" marker-end="url(#arrow-blue)"/>
+  <!-- Node 5: Keyword Processing -->
+  <rect x="100" y="452" width="280" height="90" rx="6" fill="#052e16" stroke="#10b981" stroke-width="1.5"/>
+  <text x="135" y="474" fill="#10b981" font-size="10" font-weight="600" letter-spacing="0.06em">主题词处理</text>
+  <text x="135" y="494" fill="#e2e8f0" font-size="12">1. 生成 15-50 个概念节点</text>
+  <text x="135" y="510" fill="#e2e8f0" font-size="12">2. 按类型分为 3-6 个分类</text>
+  <text x="135" y="526" fill="#e2e8f0" font-size="12">3. 计算权重 (1-100)</text>
+  <text x="135" y="542" fill="#94a3b8" font-size="11">4. 建立节点间关系链接</text>
+  <!-- Node 6: Markdown Processing -->
+  <rect x="580" y="452" width="280" height="90" rx="6" fill="#1e3a5f" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="615" y="474" fill="#3b82f6" font-size="10" font-weight="600" letter-spacing="0.06em">MARKDOWN 解析</text>
+  <text x="615" y="494" fill="#e2e8f0" font-size="12">h1  →  核心节点  (权重 80-100)</text>
+  <text x="615" y="510" fill="#e2e8f0" font-size="12">h2  →  子类节点  (权重 50-79)</text>
+  <text x="615" y="526" fill="#e2e8f0" font-size="12">h3-h4 → 细节节点 (权重 20-49)</text>
+  <text x="615" y="542" fill="#94a3b8" font-size="11">**加粗** → 关键词节点 (10-30)</text>
+  <path d="M 240,542 L 240,585 L 310,585" stroke="#10b981" stroke-width="1.5" fill="none"/>
+  <path d="M 720,542 L 720,585 L 650,585" stroke="#3b82f6" stroke-width="1.5" fill="none"/>
+  <!-- Node 7: Data Schema -->
+  <rect x="310" y="560" width="340" height="70" rx="6" fill="#1e1b4b" stroke="#a855f7" stroke-width="2" filter="url(#glow-purple)"/>
+  <text x="345" y="583" fill="#a855f7" font-size="10" font-weight="600" letter-spacing="0.06em">数据结构 (JSON)</text>
+  <text x="345" y="601" fill="#e2e8f0" font-size="12">{ meta, nodes[], links[], categories[] }</text>
+  <text x="345" y="619" fill="#94a3b8" font-size="11">节点 ≤ 500 | 权重: 1-100 | ID 唯一</text>
+  <line x1="480" y1="630" x2="480" y2="660" stroke="#a855f7" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+  <!-- Node 8: Config -->
+  <rect x="310" y="662" width="340" height="50" rx="6" fill="#0f172a" stroke="#eab308" stroke-width="1.5"/>
+  <text x="345" y="683" fill="#eab308" font-size="10" font-weight="600" letter-spacing="0.06em">配置选择</text>
+  <text x="345" y="701" fill="#e2e8f0" font-size="13">主题 &amp; 布局参数</text>
+  <text x="665" y="676" fill="#475569" font-size="10">dark-tech | nature-fresh</text>
+  <text x="665" y="690" fill="#475569" font-size="10">warm-sunset | ocean-deep</text>
+  <text x="665" y="704" fill="#475569" font-size="10">force | radial</text>
+  <line x1="480" y1="712" x2="480" y2="740" stroke="#eab308" stroke-width="1.5" marker-end="url(#arrow-gold)"/>
+  <!-- Node 9: Render -->
+  <rect x="340" y="742" width="280" height="50" rx="6" fill="#052e16" stroke="#10b981" stroke-width="2" filter="url(#glow-cyan)"/>
+  <text x="375" y="763" fill="#10b981" font-size="10" font-weight="600" letter-spacing="0.06em">渲染输出</text>
+  <text x="375" y="781" fill="#e2e8f0" font-size="13">templates/index.html → HTML 输出</text>
+  <!-- Legend -->
+  <rect x="30" y="80" width="160" height="140" rx="6" fill="#0f172a" stroke="#334155" stroke-width="1" fill-opacity="0.8"/>
+  <text x="50" y="100" fill="#94a3b8" font-size="10" font-weight="600" letter-spacing="0.06em">图例</text>
+  <line x1="50" y1="118" x2="80" y2="118" stroke="#a855f7" stroke-width="1.5"/>
+  <text x="88" y="122" fill="#e2e8f0" font-size="10">控制流</text>
+  <line x1="50" y1="138" x2="80" y2="138" stroke="#22d3ee" stroke-width="1.5"/>
+  <text x="88" y="142" fill="#e2e8f0" font-size="10">技能/解析</text>
+  <line x1="50" y1="158" x2="80" y2="158" stroke="#10b981" stroke-width="1.5"/>
+  <text x="88" y="162" fill="#e2e8f0" font-size="10">数据/渲染</text>
+  <line x1="50" y1="178" x2="80" y2="178" stroke="#f97316" stroke-width="1.5"/>
+  <text x="88" y="182" fill="#e2e8f0" font-size="10">条件判断</text>
+  <line x1="50" y1="198" x2="80" y2="198" stroke="#eab308" stroke-width="1.5"/>
+  <text x="88" y="202" fill="#e2e8f0" font-size="10">配置参数</text>
+</svg>
